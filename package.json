@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "Create a random string fast",
   "main": "dist/index.js",
+  "browser": "browser/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --progress --colors"
+    "test": "mocha dist/index.test.js",
+    "build": "webpack --progress --colors && tsc --outDir ./dist",
+    "server": "http-server -c0"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,7 @@
   "devDependencies": {
     "@types/lodash.isfinite": "^3.3.2",
     "@types/lodash.isstring": "^4.0.2",
+    "@types/mocha": "^2.2.41",
     "@types/node": "^7.0.22",
     "http-server": "^0.10.0",
     "mocha": "^3.4.2",
@@ -33,7 +36,6 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
-    "crypto-browserify": "^3.11.0",
     "lodash.isfinite": "^3.3.2",
     "lodash.isstring": "^4.0.1"
   }
