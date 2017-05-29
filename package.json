@@ -6,7 +6,7 @@
   "browser": "browser/index.js",
   "scripts": {
     "test": "mocha dist/index.test.js",
-    "build": "webpack --progress --colors && tsc --outDir ./dist",
+    "build": "webpack --optimize-minimize --progress --colors && tsc --outDir ./dist",
     "server": "http-server -c0"
   },
   "repository": {
