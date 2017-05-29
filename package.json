@@ -1,0 +1,40 @@
+{
+  "name": "simple-randstring",
+  "version": "1.0.0",
+  "description": "Create a random string fast",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --progress --colors"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dustin71728/simple-randstring.git"
+  },
+  "keywords": [
+    "random",
+    "string"
+  ],
+  "author": "Kiwi.Liu <kiwi71728@icloud.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dustin71728/simple-randstring/issues"
+  },
+  "homepage": "https://github.com/dustin71728/simple-randstring#readme",
+  "devDependencies": {
+    "@types/lodash.isfinite": "^3.3.2",
+    "@types/lodash.isstring": "^4.0.2",
+    "@types/node": "^7.0.22",
+    "http-server": "^0.10.0",
+    "mocha": "^3.4.2",
+    "ts-loader": "^2.1.0",
+    "typescript": "^2.3.3",
+    "webpack": "^2.6.1"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.23.0",
+    "crypto-browserify": "^3.11.0",
+    "lodash.isfinite": "^3.3.2",
+    "lodash.isstring": "^4.0.1"
+  }
+}
