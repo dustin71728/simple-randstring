@@ -12,16 +12,23 @@ var isFinite = require('lodash.isfinite');
 var isString = require('lodash.isstring');
 var LETTERS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 var MAX_INTEGER = Number.MAX_SAFE_INTEGER;
-exports.MAXIMUM_POOL_SIZE = 100;
+var ALIGNED_SIZE = 256;
+exports.MAXIMUM_POOL_SIZE = 200;
 var customLetters = '';
+var alignedLetters = LETTERS.repeat(Math.floor(ALIGNED_SIZE / LETTERS.length));
 function _getLetters() {
     var letters = (isString(customLetters) && customLetters.length)
         ? customLetters : LETTERS;
     var base = letters.length;
     return { letters: letters, base: base };
 }
-function setRandLetters(letters) {
-    customLetters = letters;
+function setRandLetters(argLetters) {
+    customLetters = argLetters;
+    var _a = _getLetters(), letters = _a.letters, base = _a.base;
+    alignedLetters = letters.repeat(Math.floor(ALIGNED_SIZE / base));
+    if (!alignedLetters.length) {
+        alignedLetters = letters.substr(0, ALIGNED_SIZE);
+    }
 }
 exports.setRandLetters = setRandLetters;
 function _TestGetLetters() {
@@ -29,13 +36,12 @@ function _TestGetLetters() {
 }
 exports._TestGetLetters = _TestGetLetters;
 function _estimatedPoolSize(base, randStrSize, strongCrypto) {
-    var base2Multiplier = Math.log2(base);
     var poolSize = 0;
     if (strongCrypto) {
-        poolSize = Math.ceil(randStrSize * base2Multiplier / 32);
+        poolSize = Math.ceil(randStrSize / 4);
     }
     else {
-        poolSize = Math.ceil(randStrSize * base2Multiplier / 53);
+        poolSize = Math.ceil(randStrSize * Math.log2(base) / 53);
     }
     return poolSize > exports.MAXIMUM_POOL_SIZE ? exports.MAXIMUM_POOL_SIZE : poolSize;
 }
@@ -50,47 +56,64 @@ function _isWindow(obj) {
 function _getCrypto(obj) {
     return obj.crypto || obj.msCrypto;
 }
-function _getRandomIntPool(base, randStrSize, strongCrypto) {
-    var poolSize = _estimatedPoolSize(base, randStrSize, strongCrypto);
-    function weakCrypto() {
-        var randList = [];
-        for (var i = 0; i < poolSize; ++i) {
-            randList[i] = Math.floor(Math.random() * MAX_INTEGER);
-        }
-        return randList;
+function _strongCryptoSupported() {
+    if (_isWindow(global)) {
+        return !!(_getCrypto(global) && _getCrypto(global).getRandomValues);
     }
-    if (strongCrypto) {
-        var randList_1 = new Array(poolSize);
+    else {
+        return true;
+    }
+}
+function _getRandomList(size, strongCrypto) {
+    var randList = new Array(size);
+    if (strongCrypto && _strongCryptoSupported()) {
         if (_isWindow(global)) {
-            if (_getCrypto(global) && _getCrypto(global).getRandomValues) {
-                var tempList = new Uint32Array(poolSize);
-                _getCrypto(global).getRandomValues(tempList);
-                tempList.forEach(function (value, index) {
-                    randList_1[index] = value;
-                });
-                return randList_1;
-            }
-            else {
-                console.error('Browser is not capable of generating secure random number, fall back to use random()');
-                return weakCrypto();
-            }
+            var tempList = new Uint32Array(size);
+            _getCrypto(global).getRandomValues(tempList);
+            tempList.forEach(function (value, index) {
+                randList[index] = value;
+            });
+            return randList;
         }
         else {
-            for (var i = 0; i < poolSize; ++i) {
-                randList_1[i] = crypto.randomBytes(32).readUInt32LE(0);
+            var buffer = crypto.randomBytes(size * 4);
+            for (var i = 0; i < size; ++i) {
+                randList[i] = buffer.readUInt32LE(i * 4);
             }
-            return randList_1;
+            return randList;
         }
     }
     else {
-        return weakCrypto();
+        var randList_1 = [];
+        for (var i = 0; i < size; ++i) {
+            randList_1[i] = Math.floor(Math.random() * MAX_INTEGER);
+        }
+        return randList_1;
     }
+}
+function _getRandomIntPool(base, randStrSize, strongCrypto) {
+    var canStrongCrypto = strongCrypto && _strongCryptoSupported();
+    var poolSize = _estimatedPoolSize(base, randStrSize, canStrongCrypto);
+    return _getRandomList(poolSize, canStrongCrypto);
 }
 function _TestGetRandomIntPool(randStrSize, strongCrypto) {
     var base = _getLetters().base;
     return _getRandomIntPool(base, randStrSize, strongCrypto);
 }
 exports._TestGetRandomIntPool = _TestGetRandomIntPool;
+function _getAlignedLetters(strongCrypto) {
+    var _a = _getLetters(), base = _a.base, letters = _a.letters;
+    var newLetters = alignedLetters;
+    var remain = ALIGNED_SIZE % base;
+    if (!remain) {
+        return { base: ALIGNED_SIZE, letters: newLetters };
+    }
+    var randList = _getRandomList(remain, strongCrypto);
+    for (var index = 0; index < remain; ++index) {
+        newLetters += letters[randList[index] % base];
+    }
+    return { base: ALIGNED_SIZE, letters: newLetters };
+}
 function randomString(strLength, strongCrypto) {
     if (strongCrypto === void 0) { strongCrypto = false; }
     if (!isFinite(strLength))
@@ -98,18 +121,36 @@ function randomString(strLength, strongCrypto) {
     var result = '';
     var randNum = 0;
     var letterPosition = 0;
-    var _a = _getLetters(), base = _a.base, letters = _a.letters;
-    var randomNumbers = _getRandomIntPool(base, strLength, strongCrypto);
-    while (result.length < strLength) {
-        if (randNum < 1) {
+    if (strongCrypto && _strongCryptoSupported()) {
+        var _a = _getAlignedLetters(strongCrypto), base = _a.base, letters = _a.letters;
+        var randomNumbers = _getRandomIntPool(base, strLength, strongCrypto);
+        while (result.length < strLength) {
             if (!randomNumbers.length) {
                 randomNumbers = _getRandomIntPool(base, strLength - result.length, strongCrypto);
             }
             randNum = randomNumbers.pop();
+            for (var byteOrder = 0; byteOrder < 4; ++byteOrder) {
+                result += letters[randNum & 0x000000FF];
+                randNum = randNum >> 8;
+                if (result.length === strLength)
+                    break;
+            }
         }
-        letterPosition = randNum % base;
-        randNum = Math.floor(randNum / base);
-        result += letters.charAt(letterPosition);
+    }
+    else {
+        var _b = _getLetters(), base = _b.base, letters = _b.letters;
+        var randomNumbers = _getRandomIntPool(base, strLength, strongCrypto);
+        while (result.length < strLength) {
+            if (randNum < 1) {
+                if (!randomNumbers.length) {
+                    randomNumbers = _getRandomIntPool(base, strLength - result.length, strongCrypto);
+                }
+                randNum = randomNumbers.pop();
+            }
+            letterPosition = randNum % base;
+            randNum = Math.floor(randNum / base);
+            result += letters.charAt(letterPosition);
+        }
     }
     return result;
 }

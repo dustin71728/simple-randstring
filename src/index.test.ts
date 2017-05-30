@@ -4,7 +4,8 @@ import randomString, {
     setRandLetters,
     LetterInfo,
     _TestGetLetters,
-    _TestGetRandomIntPool
+    _TestGetRandomIntPool,
+    MAXIMUM_POOL_SIZE
 } from './index'
 import * as assert from 'assert'
 const isFinite = require('lodash.isfinite')
@@ -27,17 +28,17 @@ describe('Random string unit test', function() {
         it('should return right pool size when letters are [0-9]', function() {
             setRandLetters('0123456789')
             assert.equal(2, _TestEstimatedPoolSize( 16, false ), 'strongCrypto=false' )
-            assert.equal(2, _TestEstimatedPoolSize( 16, true ), 'strongCrypto=true' )
+            assert.equal(4, _TestEstimatedPoolSize( 16, true ), 'strongCrypto=true' )
         })
         it('should return right pool size when letters are default collection', function() {
             setRandLetters('')
             assert.equal(3, _TestEstimatedPoolSize( 20, false ) )
-            assert.equal(4, _TestEstimatedPoolSize( 20, true ) )
+            assert.equal(5, _TestEstimatedPoolSize( 20, true ) )
         })
         it('should return maximum pool size', function() {
             setRandLetters('')
-            assert.equal(100, _TestEstimatedPoolSize( 1000, false ) )
-            assert.equal(100, _TestEstimatedPoolSize( 1000, true ) )
+            assert.equal(MAXIMUM_POOL_SIZE, _TestEstimatedPoolSize( 5000, false ) )
+            assert.equal(MAXIMUM_POOL_SIZE, _TestEstimatedPoolSize( 1000, true ) )
         })
     })
 
