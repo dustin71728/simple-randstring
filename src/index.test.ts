@@ -7,7 +7,8 @@ import randomString, {
     _TestGetRandomIntPool,
     MAXIMUM_POOL_SIZE
 } from './index'
-import * as assert from 'assert'
+import 'should'
+
 const isFinite = require('lodash.isfinite')
 
 interface Elements {
@@ -48,69 +49,68 @@ class Statistics {
     }
 }
 
-describe('Random string unit test', function() {
+describe('Validate task named', function() {
 
     describe('setRandLetters', function() {
         it('should have right number of letters', function() {
             const { base } = _TestGetLetters()
-            assert.equal( 62, base, 'default collection' )
+            base.should.be.equal(62, 'default collection')
         })
         it('should have the same number as the argument passed to setRandLetters', function() {
             setRandLetters('0123456789')
             const { base } = _TestGetLetters()
-            assert.equal( 10, base, 'collection: [0-9]' )
+            base.should.be.equal(10, 'collection: [0-9]')
         })
     })
 
     describe('_estimatedPoolSize', function() {
         it('should return right pool size when letters are [0-9]', function() {
             setRandLetters('0123456789')
-            assert.equal(2, _TestEstimatedPoolSize( 16, false ), 'strongCrypto=false' )
-            assert.equal(4, _TestEstimatedPoolSize( 16, true ), 'strongCrypto=true' )
+
+            _TestEstimatedPoolSize( 16, false ).should.be.equal( 2, 'strongCrypto=false' )
+            _TestEstimatedPoolSize( 16, true ).should.be.equal( 4, 'strongCrypto=true' )
         })
         it('should return right pool size when letters are default collection', function() {
             setRandLetters('')
-            assert.equal(3, _TestEstimatedPoolSize( 20, false ) )
-            assert.equal(5, _TestEstimatedPoolSize( 20, true ) )
+
+            _TestEstimatedPoolSize( 20, false ).should.be.equal( 3, 'strongCrypto=false' )
+            _TestEstimatedPoolSize( 20, true ).should.be.equal( 5, 'strongCrypto=true' )
         })
         it('should return maximum pool size', function() {
             setRandLetters('')
-            assert.equal(MAXIMUM_POOL_SIZE, _TestEstimatedPoolSize( 5000, false ) )
-            assert.equal(MAXIMUM_POOL_SIZE, _TestEstimatedPoolSize( 1000, true ) )
+            _TestEstimatedPoolSize( 5000, false )
+                .should.be.equal( MAXIMUM_POOL_SIZE, 'strongCrypto=false' )
+            _TestEstimatedPoolSize( 1000, true )
+                .should.be.equal( MAXIMUM_POOL_SIZE, 'strongCrypto=true' )
         })
     })
 
     describe('_getRandomIntPool', function() {
         it('should return an array and it\'s size is the same as _TestEstimatedPoolSize', function() {
-            assert.equal(
-                _TestEstimatedPoolSize( 10, false ),
-                _TestGetRandomIntPool( 10, false ).filter( value => isFinite( value ) ).length
-            )
-            assert.equal(
-                _TestEstimatedPoolSize( 10, true ),
-                _TestGetRandomIntPool( 10, true ).filter( value => isFinite( value ) ).length
-            )
-            assert.equal(
-                _TestEstimatedPoolSize( 1000, false ),
-                _TestGetRandomIntPool( 1000, false ).filter( value => isFinite( value ) ).length
-            )
-            assert.equal(
-                _TestEstimatedPoolSize( 1000, true ),
-                _TestGetRandomIntPool( 1000, true ).filter( value => isFinite( value ) ).length
-            )
+            _TestGetRandomIntPool( 10, false ).filter( value => isFinite( value ) ).length
+                .should.be.equal( _TestEstimatedPoolSize( 10, false ) )
+
+            _TestGetRandomIntPool( 10, true ).filter( value => isFinite( value ) ).length
+                .should.be.equal( _TestEstimatedPoolSize( 10, true ) )
+
+            _TestGetRandomIntPool( 1000, false ).filter( value => isFinite( value ) ).length
+                .should.be.equal( _TestEstimatedPoolSize( 1000, false ) )
+
+            _TestGetRandomIntPool( 1000, true ).filter( value => isFinite( value ) ).length
+                .should.be.equal( _TestEstimatedPoolSize( 1000, true ) )
         })
     })
 
     describe('randomString', function() {
         it('should return string that the length is specified by the argument', function() {
-            assert.equal( 10, randomString( 10, false ).length )
-            assert.equal( 10, randomString( 10, true ).length )
-            assert.equal( 50, randomString( 50, false ).length )
-            assert.equal( 50, randomString( 50, true ).length )
-            assert.equal( 1000, randomString( 1000, false ).length )
-            assert.equal( 1000, randomString( 1000, true ).length )
-            assert.equal( 10000, randomString( 10000, false ).length )
-            assert.equal( 10000, randomString( 10000, true ).length )
+            randomString( 10, false ).length.should.be.equal(10)
+            randomString( 10, true ).length.should.be.equal(10)
+            randomString( 50, false ).length.should.be.equal(50)
+            randomString( 50, true ).length.should.be.equal(50)
+            randomString( 1000, false ).length.should.be.equal(1000)
+            randomString( 1000, true ).length.should.be.equal(1000)
+            randomString( 10000, false ).length.should.be.equal(10000)
+            randomString( 10000, true ).length.should.be.equal(10000)
         })
     })
 
@@ -120,14 +120,14 @@ describe('Random string unit test', function() {
             for( let i=0; i<10000; ++i ) {
                 Statistics1.setElements( randomString( 30, true ) )
             }
-            assert.equal( true, Statistics1.getResult() < 80 )
+            Statistics1.getResult().should.below( 80 )
         })
         it('should return standard deviation less than 800 when strongCrypto is off', function() {
             const Statistics1 = new Statistics()
             for( let i=0; i<10000; ++i ) {
                 Statistics1.setElements( randomString( 30, false ) )
             }
-            assert.equal( true, Statistics1.getResult() < 800 )
+            Statistics1.getResult().should.below( 800 )
         })
     })
 })
