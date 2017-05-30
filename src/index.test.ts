@@ -10,6 +10,44 @@ import randomString, {
 import * as assert from 'assert'
 const isFinite = require('lodash.isfinite')
 
+interface Elements {
+    [element: string]: number
+}
+
+class Statistics {
+    private elements: Elements
+    constructor() {
+        this.elements = {}
+    }
+    public standardDeviation( arr: number[] ) {
+        let total = arr.reduce( ( pre, cur ) => pre + cur, 0 )
+        let average = 0
+        average = total / arr.length
+        let variation = 0
+        for( let value of arr ) {
+            variation += Math.pow( value - average, 2 )
+        }
+        return Math.sqrt( variation / arr.length )
+    }
+    public setElements( letters: string ) {
+        for( const letter of letters.split('') ) {
+            if( !this.elements[ letter ] ) {
+                this.elements[ letter ] = 1
+            }
+            else {
+                this.elements[ letter ]++
+            }
+        }
+    }
+    public getResult(): number {
+        let arr: number[] = []
+        for( const element of Object.keys( this.elements ) ) {
+            arr.push( this.elements[ element ] )
+        }
+        return this.standardDeviation( arr )
+    }
+}
+
 describe('Random string unit test', function() {
 
     describe('setRandLetters', function() {
@@ -73,6 +111,23 @@ describe('Random string unit test', function() {
             assert.equal( 1000, randomString( 1000, true ).length )
             assert.equal( 10000, randomString( 10000, false ).length )
             assert.equal( 10000, randomString( 10000, true ).length )
+        })
+    })
+
+    describe('statistics', function() {
+        it('should return standard deviation less than 80 when strongCrypto is on', function() {
+            const Statistics1 = new Statistics()
+            for( let i=0; i<10000; ++i ) {
+                Statistics1.setElements( randomString( 30, true ) )
+            }
+            assert.equal( true, Statistics1.getResult() < 80 )
+        })
+        it('should return standard deviation less than 800 when strongCrypto is off', function() {
+            const Statistics1 = new Statistics()
+            for( let i=0; i<10000; ++i ) {
+                Statistics1.setElements( randomString( 30, false ) )
+            }
+            assert.equal( true, Statistics1.getResult() < 800 )
         })
     })
 })
