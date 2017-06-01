@@ -23,5 +23,5 @@ import randomString, {setRandCharset} from 'simple-randstring'
 setRandCharset('abcdefg()!@#$%')
 
 // Return something like ')ag)(#fbe@!a%g%$g(b#'
-randomString(20)
+randomString(20, true)
 ```
