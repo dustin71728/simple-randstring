@@ -26,14 +26,14 @@ let customCharset: string = ''
 let alignedCharset: string = CHARACTERS.repeat(Math.floor(ALIGNED_SIZE / CHARACTERS.length))
 
 function _getCharset(): CharsetInfo {
-  const charset: string = (isString(customCharset) && customCharset.length)
+  const charset: string = (isString(customCharset) && customCharset.length > 1)
     ? customCharset : CHARACTERS
   const base: number = charset.length
   return { charset, base }
 }
 
 export function setRandCharset(argCharset: string): void {
-  customCharset = argCharset
+  customCharset = argCharset.trim()
   const { charset, base } = _getCharset()
   alignedCharset = charset.repeat(Math.floor(ALIGNED_SIZE / base))
   if (!alignedCharset.length) {

@@ -17,13 +17,13 @@ exports.MAXIMUM_POOL_SIZE = 200;
 var customCharset = '';
 var alignedCharset = CHARACTERS.repeat(Math.floor(ALIGNED_SIZE / CHARACTERS.length));
 function _getCharset() {
-    var charset = (isString(customCharset) && customCharset.length)
+    var charset = (isString(customCharset) && customCharset.length > 1)
         ? customCharset : CHARACTERS;
     var base = charset.length;
     return { charset: charset, base: base };
 }
 function setRandCharset(argCharset) {
-    customCharset = argCharset;
+    customCharset = argCharset.trim();
     var _a = _getCharset(), charset = _a.charset, base = _a.base;
     alignedCharset = charset.repeat(Math.floor(ALIGNED_SIZE / base));
     if (!alignedCharset.length) {
