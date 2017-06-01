@@ -1,9 +1,9 @@
 /// <reference path="../node_modules/typescript/lib/lib.es6.d.ts" />
 import randomString, {
   _TestEstimatedPoolSize,
-  setRandLetters,
-  LetterInfo,
-  _TestGetLetters,
+  setRandCharset,
+  CharsetInfo,
+  _TestGetCharset,
   _TestGetRandomIntPool,
   MAXIMUM_POOL_SIZE
 } from './index'
@@ -30,13 +30,13 @@ class Statistics {
     }
     return Math.sqrt(variation / arr.length)
   }
-  public setElements(letters: string) {
-    for (const letter of letters.split('')) {
-      if (!this.elements[letter]) {
-        this.elements[letter] = 1
+  public setElements(charset: string) {
+    for (const char of charset.split('')) {
+      if (!this.elements[char]) {
+        this.elements[char] = 1
       }
       else {
-        this.elements[letter]++
+        this.elements[char]++
       }
     }
   }
@@ -49,85 +49,82 @@ class Statistics {
   }
 }
 
-describe('Validate task named', function () {
-
-  describe('setRandLetters', function () {
-    it('should have right number of letters', function () {
-      const { base } = _TestGetLetters()
-      base.should.be.equal(62, 'default collection')
-    })
-    it('should have the same number as the argument passed to setRandLetters', function () {
-      setRandLetters('0123456789')
-      const { base } = _TestGetLetters()
-      base.should.be.equal(10, 'collection: [0-9]')
-    })
+describe('Test setRandCharset', function () {
+  it('should return correct number of default characters', function () {
+    const { base } = _TestGetCharset()
+    base.should.be.equal(62, 'default collection')
   })
-
-  describe('_estimatedPoolSize', function () {
-    it('should return right pool size when letters are [0-9]', function () {
-      setRandLetters('0123456789')
-
-      _TestEstimatedPoolSize(16, false).should.be.equal(2, 'strongCrypto=false')
-      _TestEstimatedPoolSize(16, true).should.be.equal(4, 'strongCrypto=true')
-    })
-    it('should return right pool size when letters are default collection', function () {
-      setRandLetters('')
-
-      _TestEstimatedPoolSize(20, false).should.be.equal(3, 'strongCrypto=false')
-      _TestEstimatedPoolSize(20, true).should.be.equal(5, 'strongCrypto=true')
-    })
-    it('should return maximum pool size', function () {
-      setRandLetters('')
-      _TestEstimatedPoolSize(5000, false)
-        .should.be.equal(MAXIMUM_POOL_SIZE, 'strongCrypto=false')
-      _TestEstimatedPoolSize(1000, true)
-        .should.be.equal(MAXIMUM_POOL_SIZE, 'strongCrypto=true')
-    })
+  it('should return the number of characters specified by the argument', function () {
+    setRandCharset('0123456789')
+    const { base } = _TestGetCharset()
+    base.should.be.equal(10, 'collection: [0-9]')
   })
+})
 
-  describe('_getRandomIntPool', function () {
-    it('should return an array and it\'s size is the same as _TestEstimatedPoolSize', function () {
-      _TestGetRandomIntPool(10, false).filter(value => isFinite(value)).length
-        .should.be.equal(_TestEstimatedPoolSize(10, false))
+describe('Test estimatedPoolSize', function () {
+  it('should return correct length when characters are equal to [0-9]', function () {
+    setRandCharset('0123456789')
 
-      _TestGetRandomIntPool(10, true).filter(value => isFinite(value)).length
-        .should.be.equal(_TestEstimatedPoolSize(10, true))
-
-      _TestGetRandomIntPool(1000, false).filter(value => isFinite(value)).length
-        .should.be.equal(_TestEstimatedPoolSize(1000, false))
-
-      _TestGetRandomIntPool(1000, true).filter(value => isFinite(value)).length
-        .should.be.equal(_TestEstimatedPoolSize(1000, true))
-    })
+    _TestEstimatedPoolSize(16, false).should.be.equal(2, 'strongCrypto=false')
+    _TestEstimatedPoolSize(16, true).should.be.equal(4, 'strongCrypto=true')
   })
+  it('should return correct length when characters are default collection', function () {
+    setRandCharset('')
 
-  describe('randomString', function () {
-    it('should return string that the length is specified by the argument', function () {
-      randomString(10, false).length.should.be.equal(10)
-      randomString(10, true).length.should.be.equal(10)
-      randomString(50, false).length.should.be.equal(50)
-      randomString(50, true).length.should.be.equal(50)
-      randomString(1000, false).length.should.be.equal(1000)
-      randomString(1000, true).length.should.be.equal(1000)
-      randomString(10000, false).length.should.be.equal(10000)
-      randomString(10000, true).length.should.be.equal(10000)
-    })
+    _TestEstimatedPoolSize(20, false).should.be.equal(3, 'strongCrypto=false')
+    _TestEstimatedPoolSize(20, true).should.be.equal(5, 'strongCrypto=true')
   })
+  it('should return maximum length', function () {
+    setRandCharset('')
+    _TestEstimatedPoolSize(5000, false)
+      .should.be.equal(MAXIMUM_POOL_SIZE, 'strongCrypto=false')
+    _TestEstimatedPoolSize(1000, true)
+      .should.be.equal(MAXIMUM_POOL_SIZE, 'strongCrypto=true')
+  })
+})
 
-  describe('statistics', function () {
-    it('should return standard deviation less than 80 when strongCrypto is on', function () {
-      const Statistics1 = new Statistics()
-      for (let i = 0; i < 10000; ++i) {
-        Statistics1.setElements(randomString(30, true))
-      }
-      Statistics1.getResult().should.below(80)
-    })
-    it('should return standard deviation less than 800 when strongCrypto is off', function () {
-      const Statistics1 = new Statistics()
-      for (let i = 0; i < 10000; ++i) {
-        Statistics1.setElements(randomString(30, false))
-      }
-      Statistics1.getResult().should.below(800)
-    })
+describe('Test getRandomIntPool', function () {
+  it('should return an array and it\'s length is the same as _TestEstimatedPoolSize', function () {
+    _TestGetRandomIntPool(10, false).filter(value => isFinite(value)).length
+      .should.be.equal(_TestEstimatedPoolSize(10, false))
+
+    _TestGetRandomIntPool(10, true).filter(value => isFinite(value)).length
+      .should.be.equal(_TestEstimatedPoolSize(10, true))
+
+    _TestGetRandomIntPool(1000, false).filter(value => isFinite(value)).length
+      .should.be.equal(_TestEstimatedPoolSize(1000, false))
+
+    _TestGetRandomIntPool(1000, true).filter(value => isFinite(value)).length
+      .should.be.equal(_TestEstimatedPoolSize(1000, true))
+  })
+})
+
+describe('Test randomString', function () {
+  it('should return string that the length is specified by the argument', function () {
+    randomString(10, false).length.should.be.equal(10)
+    randomString(10, true).length.should.be.equal(10)
+    randomString(50, false).length.should.be.equal(50)
+    randomString(50, true).length.should.be.equal(50)
+    randomString(1000, false).length.should.be.equal(1000)
+    randomString(1000, true).length.should.be.equal(1000)
+    randomString(10000, false).length.should.be.equal(10000)
+    randomString(10000, true).length.should.be.equal(10000)
+  })
+})
+
+describe('Examine random string', function () {
+  it('should return standard deviation less than 80 when strongCrypto is on', function () {
+    const Statistics1 = new Statistics()
+    for (let i = 0; i < 10000; ++i) {
+      Statistics1.setElements(randomString(30, true))
+    }
+    Statistics1.getResult().should.below(80)
+  })
+  it('should return standard deviation less than 800 when strongCrypto is off', function () {
+    const Statistics1 = new Statistics()
+    for (let i = 0; i < 10000; ++i) {
+      Statistics1.setElements(randomString(30, false))
+    }
+    Statistics1.getResult().should.below(800)
   })
 })
