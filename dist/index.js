@@ -17,17 +17,17 @@ exports.MAXIMUM_POOL_SIZE = 200;
 var customCharset = '';
 var alignedCharset = CHARACTERS.repeat(Math.floor(ALIGNED_SIZE / CHARACTERS.length));
 function _getCharset() {
-    var letters = (isString(customCharset) && customCharset.length)
+    var charset = (isString(customCharset) && customCharset.length)
         ? customCharset : CHARACTERS;
-    var base = letters.length;
-    return { letters: letters, base: base };
+    var base = charset.length;
+    return { charset: charset, base: base };
 }
 function setRandCharset(argCharset) {
     customCharset = argCharset;
-    var _a = _getCharset(), letters = _a.letters, base = _a.base;
-    alignedCharset = letters.repeat(Math.floor(ALIGNED_SIZE / base));
+    var _a = _getCharset(), charset = _a.charset, base = _a.base;
+    alignedCharset = charset.repeat(Math.floor(ALIGNED_SIZE / base));
     if (!alignedCharset.length) {
-        alignedCharset = letters.substr(0, ALIGNED_SIZE);
+        alignedCharset = charset.substr(0, ALIGNED_SIZE);
     }
 }
 exports.setRandCharset = setRandCharset;
@@ -102,17 +102,17 @@ function _TestGetRandomIntPool(randStrSize, strongCrypto) {
 }
 exports._TestGetRandomIntPool = _TestGetRandomIntPool;
 function _getAlignedCharset(strongCrypto) {
-    var _a = _getCharset(), base = _a.base, letters = _a.letters;
+    var _a = _getCharset(), base = _a.base, charset = _a.charset;
     var newCharset = alignedCharset;
     var remain = ALIGNED_SIZE % base;
     if (!remain) {
-        return { base: ALIGNED_SIZE, letters: newCharset };
+        return { base: ALIGNED_SIZE, charset: newCharset };
     }
     var randList = _getRandomList(remain, strongCrypto);
     for (var index = 0; index < remain; ++index) {
-        newCharset += letters[randList[index] % base];
+        newCharset += charset[randList[index] % base];
     }
-    return { base: ALIGNED_SIZE, letters: newCharset };
+    return { base: ALIGNED_SIZE, charset: newCharset };
 }
 function randomString(strLength, strongCrypto) {
     if (strongCrypto === void 0) { strongCrypto = false; }
@@ -120,9 +120,9 @@ function randomString(strLength, strongCrypto) {
         return '';
     var result = '';
     var randNum = 0;
-    var letterPosition = 0;
+    var charPosition = 0;
     if (strongCrypto && _strongCryptoSupported()) {
-        var _a = _getAlignedCharset(strongCrypto), base = _a.base, letters = _a.letters;
+        var _a = _getAlignedCharset(strongCrypto), base = _a.base, charset = _a.charset;
         var randomNumbers = _getRandomIntPool(base, strLength, strongCrypto);
         while (result.length < strLength) {
             if (!randomNumbers.length) {
@@ -130,7 +130,7 @@ function randomString(strLength, strongCrypto) {
             }
             randNum = randomNumbers.pop();
             for (var byteOrder = 0; byteOrder < 4; ++byteOrder) {
-                result += letters[randNum & 0x000000FF];
+                result += charset[randNum & 0x000000FF];
                 randNum = randNum >> 8;
                 if (result.length === strLength)
                     break;
@@ -138,7 +138,7 @@ function randomString(strLength, strongCrypto) {
         }
     }
     else {
-        var _b = _getCharset(), base = _b.base, letters = _b.letters;
+        var _b = _getCharset(), base = _b.base, charset = _b.charset;
         var randomNumbers = _getRandomIntPool(base, strLength, strongCrypto);
         while (result.length < strLength) {
             if (randNum < 1) {
@@ -147,9 +147,9 @@ function randomString(strLength, strongCrypto) {
                 }
                 randNum = randomNumbers.pop();
             }
-            letterPosition = randNum % base;
+            charPosition = randNum % base;
             randNum = Math.floor(randNum / base);
-            result += letters.charAt(letterPosition);
+            result += charset.charAt(charPosition);
         }
     }
     return result;

@@ -18,7 +18,7 @@ const ALIGNED_SIZE = 256
 export const MAXIMUM_POOL_SIZE: number = 200
 
 export interface CharsetInfo {
-  letters: string
+  charset: string
   base: number
 }
 
@@ -26,18 +26,18 @@ let customCharset: string = ''
 let alignedCharset: string = CHARACTERS.repeat(Math.floor(ALIGNED_SIZE / CHARACTERS.length))
 
 function _getCharset(): CharsetInfo {
-  const letters: string = (isString(customCharset) && customCharset.length)
+  const charset: string = (isString(customCharset) && customCharset.length)
     ? customCharset : CHARACTERS
-  const base: number = letters.length
-  return { letters, base }
+  const base: number = charset.length
+  return { charset, base }
 }
 
 export function setRandCharset(argCharset: string): void {
   customCharset = argCharset
-  const { letters, base } = _getCharset()
-  alignedCharset = letters.repeat(Math.floor(ALIGNED_SIZE / base))
+  const { charset, base } = _getCharset()
+  alignedCharset = charset.repeat(Math.floor(ALIGNED_SIZE / base))
   if (!alignedCharset.length) {
-    alignedCharset = letters.substr(0, ALIGNED_SIZE)
+    alignedCharset = charset.substr(0, ALIGNED_SIZE)
   }
 }
 
@@ -134,19 +134,19 @@ export function _TestGetRandomIntPool(
 }
 
 function _getAlignedCharset(strongCrypto: boolean): CharsetInfo {
-  const { base, letters } = _getCharset()
+  const { base, charset } = _getCharset()
   let newCharset: string = alignedCharset
 
   const remain: number = ALIGNED_SIZE % base
   if (!remain) {
-    return { base: ALIGNED_SIZE, letters: newCharset }
+    return { base: ALIGNED_SIZE, charset: newCharset }
   }
 
   let randList = _getRandomList(remain, strongCrypto)
   for (let index = 0; index < remain; ++index) {
-    newCharset += letters[randList[index] % base]
+    newCharset += charset[randList[index] % base]
   }
-  return { base: ALIGNED_SIZE, letters: newCharset }
+  return { base: ALIGNED_SIZE, charset: newCharset }
 }
 
 export default function randomString(
@@ -155,10 +155,10 @@ export default function randomString(
   if (!isFinite(strLength)) return ''
   let result: string = ''
   let randNum: number = 0
-  let letterPosition: number = 0
+  let charPosition: number = 0
 
   if (strongCrypto && _strongCryptoSupported()) {
-    const { base, letters } = _getAlignedCharset(strongCrypto)
+    const { base, charset } = _getAlignedCharset(strongCrypto)
     let randomNumbers = _getRandomIntPool(base, strLength, strongCrypto)
 
     while (result.length < strLength) {
@@ -167,14 +167,14 @@ export default function randomString(
       }
       randNum = <number>randomNumbers.pop()
       for (let byteOrder = 0; byteOrder < 4; ++byteOrder) {
-        result += letters[randNum & 0x000000FF]
+        result += charset[randNum & 0x000000FF]
         randNum = randNum >> 8
         if (result.length === strLength) break;
       }
     }
   }
   else {
-    const { base, letters } = _getCharset()
+    const { base, charset } = _getCharset()
     let randomNumbers = _getRandomIntPool(base, strLength, strongCrypto)
 
     while (result.length < strLength) {
@@ -184,9 +184,9 @@ export default function randomString(
         }
         randNum = <number>randomNumbers.pop()
       }
-      letterPosition = randNum % base
+      charPosition = randNum % base
       randNum = Math.floor(randNum / base)
-      result += letters.charAt(letterPosition)
+      result += charset.charAt(charPosition)
     }
   }
   return result
