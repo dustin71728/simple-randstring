@@ -7,6 +7,7 @@ Create a random string fast
 import randomString from 'simple-randstring'
 
 // Use Math.random() to create random string, fast but not secure
+// Default charset is [0-9a-zA-Z]
 randomString(30)
 
 // Use window.crypto( on the browser ) or crypto( on node ) to create random string
