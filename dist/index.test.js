@@ -8,7 +8,7 @@ var Statistics = (function () {
     function Statistics() {
         this.elements = {};
     }
-    Statistics.prototype.standardDeviation = function (arr) {
+    Statistics.prototype.standardDeviationRatio = function (arr) {
         var total = arr.reduce(function (pre, cur) { return pre + cur; }, 0);
         var average = 0;
         average = total / arr.length;
@@ -17,7 +17,7 @@ var Statistics = (function () {
             var value = arr_1[_i];
             variation += Math.pow(value - average, 2);
         }
-        return Math.sqrt(variation / arr.length);
+        return Math.sqrt(variation / arr.length) / average;
     };
     Statistics.prototype.setElements = function (charset) {
         for (var _i = 0, _a = charset.split(''); _i < _a.length; _i++) {
@@ -36,7 +36,7 @@ var Statistics = (function () {
             var element = _a[_i];
             arr.push(this.elements[element]);
         }
-        return this.standardDeviation(arr);
+        return this.standardDeviationRatio(arr);
     };
     return Statistics;
 }());
@@ -95,18 +95,18 @@ describe('Test randomString', function () {
     });
 });
 describe('Examine random string', function () {
-    it('should return standard deviation less than 80 when strongCrypto is on', function () {
+    it('should return deviation ratio less than 0.02 when strongCrypto is on', function () {
         var Statistics1 = new Statistics();
         for (var i = 0; i < 10000; ++i) {
             Statistics1.setElements(index_1.default(30, true));
         }
-        Statistics1.getResult().should.below(80);
+        Statistics1.getResult().should.below(0.02);
     });
-    it('should return standard deviation less than 800 when strongCrypto is off', function () {
+    it('should return deviation ratio less than 0.16 when strongCrypto is off', function () {
         var Statistics1 = new Statistics();
         for (var i = 0; i < 10000; ++i) {
             Statistics1.setElements(index_1.default(30, false));
         }
-        Statistics1.getResult().should.below(800);
+        Statistics1.getResult().should.below(0.16);
     });
 });

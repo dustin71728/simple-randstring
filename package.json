@@ -40,5 +40,6 @@
     "lodash.isfinite": "^3.3.2",
     "lodash.isstring": "^4.0.1",
     "should": "^11.2.1"
-  }
+  },
+  "types": "./src/index.d.ts"
 }

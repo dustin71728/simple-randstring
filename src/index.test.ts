@@ -20,7 +20,7 @@ class Statistics {
   constructor() {
     this.elements = {}
   }
-  public standardDeviation(arr: number[]) {
+  public standardDeviationRatio(arr: number[]) {
     let total = arr.reduce((pre, cur) => pre + cur, 0)
     let average = 0
     average = total / arr.length
@@ -28,7 +28,7 @@ class Statistics {
     for (let value of arr) {
       variation += Math.pow(value - average, 2)
     }
-    return Math.sqrt(variation / arr.length)
+    return Math.sqrt(variation / arr.length) / average
   }
   public setElements(charset: string) {
     for (const char of charset.split('')) {
@@ -45,7 +45,7 @@ class Statistics {
     for (const element of Object.keys(this.elements)) {
       arr.push(this.elements[element])
     }
-    return this.standardDeviation(arr)
+    return this.standardDeviationRatio(arr)
   }
 }
 
@@ -113,18 +113,18 @@ describe('Test randomString', function () {
 })
 
 describe('Examine random string', function () {
-  it('should return standard deviation less than 80 when strongCrypto is on', function () {
+  it('should return deviation ratio less than 0.02 when strongCrypto is on', function () {
     const Statistics1 = new Statistics()
     for (let i = 0; i < 10000; ++i) {
       Statistics1.setElements(randomString(30, true))
     }
-    Statistics1.getResult().should.below(80)
+    Statistics1.getResult().should.below(0.02)
   })
-  it('should return standard deviation less than 800 when strongCrypto is off', function () {
+  it('should return deviation ratio less than 0.16 when strongCrypto is off', function () {
     const Statistics1 = new Statistics()
     for (let i = 0; i < 10000; ++i) {
       Statistics1.setElements(randomString(30, false))
     }
-    Statistics1.getResult().should.below(800)
+    Statistics1.getResult().should.below(0.16)
   })
 })
