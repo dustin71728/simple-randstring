@@ -1,3 +1,5 @@
+![Image of travis-ci](https://travis-ci.org/dustin71728/simple-randstring.svg?branch=master)
+
 # simple-randstring
 Create random strings fast
 
