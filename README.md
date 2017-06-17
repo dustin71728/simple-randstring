@@ -3,7 +3,7 @@
 # simple-randstring
 Create random strings fast
 
-# Useage:
+# Usage:
 
 ```javascript
 import randomString from 'simple-randstring'
