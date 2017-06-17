@@ -1,6 +1,6 @@
 export default function randomString(
     strLength: number,
-    strongCrypto: boolean
+    strongCrypto?: boolean
 ): string
 
 export function setRandCharset(argCharset: string): void

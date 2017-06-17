@@ -1,6 +1,6 @@
 {
   "name": "simple-randstring",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Create a random string fast",
   "main": "dist/index.js",
   "browser": "browser/index.js",
@@ -39,6 +39,7 @@
     "babel-polyfill": "^6.23.0",
     "lodash.isfinite": "^3.3.2",
     "lodash.isstring": "^4.0.1",
+    "nightwatch": "^0.9.15",
     "should": "^11.2.1"
   },
   "types": "./src/index.d.ts"

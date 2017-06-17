@@ -13,7 +13,7 @@ var isString = require('lodash.isstring');
 var CHARACTERS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 var MAX_INTEGER = Number.MAX_SAFE_INTEGER;
 var ALIGNED_SIZE = 256;
-exports.MAXIMUM_POOL_SIZE = 200;
+exports.MAXIMUM_POOL_SIZE = 16384;
 var customCharset = '';
 var alignedCharset = CHARACTERS.repeat(Math.floor(ALIGNED_SIZE / CHARACTERS.length));
 function _getCharset() {
@@ -36,14 +36,13 @@ function _TestGetCharset() {
 }
 exports._TestGetCharset = _TestGetCharset;
 function _estimatedPoolSize(base, randStrSize, strongCrypto) {
-    var poolSize = 0;
     if (strongCrypto) {
-        poolSize = Math.ceil(randStrSize / 4);
+        var poolSize = Math.ceil(randStrSize / 4);
+        return poolSize > exports.MAXIMUM_POOL_SIZE ? exports.MAXIMUM_POOL_SIZE : poolSize;
     }
     else {
-        poolSize = Math.ceil(randStrSize * Math.log2(base) / 53);
+        return Math.ceil(randStrSize * Math.log2(base) / 53);
     }
-    return poolSize > exports.MAXIMUM_POOL_SIZE ? exports.MAXIMUM_POOL_SIZE : poolSize;
 }
 function _TestEstimatedPoolSize(randStrSize, strongCrypto) {
     var base = _getCharset().base;
@@ -148,8 +147,8 @@ function randomString(strLength, strongCrypto) {
                 randNum = randomNumbers.pop();
             }
             charPosition = randNum % base;
-            randNum = Math.floor(randNum / base);
-            result += charset.charAt(charPosition);
+            randNum = (randNum - charPosition) / base;
+            result += charset[charPosition];
         }
     }
     return result;

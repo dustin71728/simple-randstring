@@ -15,7 +15,7 @@ const CHARACTERS: string = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP
 const MAX_INTEGER: number = Number.MAX_SAFE_INTEGER
 const ALIGNED_SIZE = 256
 
-export const MAXIMUM_POOL_SIZE: number = 200
+export const MAXIMUM_POOL_SIZE: number = 16384
 
 export interface CharsetInfo {
   charset: string
@@ -49,14 +49,13 @@ function _estimatedPoolSize(
   base: number,
   randStrSize: number,
   strongCrypto: boolean): number {
-  let poolSize = 0
   if (strongCrypto) {
-    poolSize = Math.ceil(randStrSize / 4)
+    const poolSize = Math.ceil(randStrSize / 4)
+    return poolSize > MAXIMUM_POOL_SIZE ? MAXIMUM_POOL_SIZE : poolSize
   }
   else {
-    poolSize = Math.ceil(randStrSize * Math.log2(base) / 53)
+    return Math.ceil(randStrSize * Math.log2(base) / 53)
   }
-  return poolSize > MAXIMUM_POOL_SIZE ? MAXIMUM_POOL_SIZE : poolSize
 }
 
 export function _TestEstimatedPoolSize(
@@ -185,8 +184,8 @@ export default function randomString(
         randNum = <number>randomNumbers.pop()
       }
       charPosition = randNum % base
-      randNum = Math.floor(randNum / base)
-      result += charset.charAt(charPosition)
+      randNum = (randNum - charPosition) / base
+      result += charset[charPosition]
     }
   }
   return result

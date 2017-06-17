@@ -64,10 +64,7 @@ describe('Test estimatedPoolSize', function () {
     });
     it('should return maximum length', function () {
         index_1.setRandCharset('');
-        index_1._TestEstimatedPoolSize(5000, false)
-            .should.be.equal(index_1.MAXIMUM_POOL_SIZE, 'strongCrypto=false');
-        index_1._TestEstimatedPoolSize(1000, true)
-            .should.be.equal(index_1.MAXIMUM_POOL_SIZE, 'strongCrypto=true');
+        index_1._TestEstimatedPoolSize(100000, true).should.be.equal(index_1.MAXIMUM_POOL_SIZE);
     });
 });
 describe('Test getRandomIntPool', function () {
@@ -92,6 +89,15 @@ describe('Test randomString', function () {
         index_1.default(1000, true).length.should.be.equal(1000);
         index_1.default(10000, false).length.should.be.equal(10000);
         index_1.default(10000, true).length.should.be.equal(10000);
+    });
+});
+describe('Test long randomString', function () {
+    this.timeout(10000);
+    it('should return string which length is 10e6(crypto is on)', function () {
+        index_1.default(10e6, true).length.should.be.equal(10e6);
+    });
+    it('should return string which length is 10e6(crypto is off)', function () {
+        index_1.default(10e6, false).length.should.be.equal(10e6);
     });
 });
 describe('Examine random string', function () {
