@@ -153,4 +153,4 @@ function randomString(strLength, strongCrypto) {
     }
     return result;
 }
-exports.default = randomString;
+exports.randomString = randomString;

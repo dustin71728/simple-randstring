@@ -1,8 +1,8 @@
 const path = require('path')
 module.exports = {
   entry: {
-      index: path.resolve(__dirname, 'src', 'index.ts'),
-      test: path.resolve(__dirname, 'src', 'index.test.ts')
+    index: path.resolve(__dirname, 'src', 'index.ts'),
+    test: path.resolve(__dirname, 'src', 'index.test.ts')
   },
   output: {
     path: path.resolve(__dirname, 'browser'),
@@ -12,11 +12,9 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
   module: {
-    rules: [
-        {
-            test: /\.ts$/,
-            use: 'ts-loader'
-        }
-    ]
+    rules: [{
+      test: /\.ts$/,
+      use: 'ts-loader'
+    }]
   }
 }

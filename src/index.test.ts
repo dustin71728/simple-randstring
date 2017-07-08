@@ -1,12 +1,13 @@
 /// <reference path="../node_modules/typescript/lib/lib.es6.d.ts" />
-import randomString, {
+import {
+  randomString,
   _TestEstimatedPoolSize,
   setRandCharset,
   CharsetInfo,
   _TestGetCharset,
   _TestGetRandomIntPool,
   MAXIMUM_POOL_SIZE
-} from './index'
+} from '../../simple-randstring'
 import 'should'
 
 const isFinite = require('lodash.isfinite')

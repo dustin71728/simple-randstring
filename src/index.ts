@@ -148,7 +148,7 @@ function _getAlignedCharset(strongCrypto: boolean): CharsetInfo {
   return { base: ALIGNED_SIZE, charset: newCharset }
 }
 
-export default function randomString(
+export function randomString(
   strLength: number,
   strongCrypto: boolean = false): string {
   if (!isFinite(strLength)) return ''
