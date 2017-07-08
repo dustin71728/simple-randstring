@@ -6,7 +6,7 @@ Create random strings fast
 # Usage:
 
 ```javascript
-import randomString from 'simple-randstring'
+import { randomString } from 'simple-randstring'
 
 // Use Math.random() to create random strings, fast but not secure
 // Default charset is [0-9a-zA-Z]
@@ -19,7 +19,7 @@ randomString(30, true)
 ```
 
 ```javascript
-import randomString, {setRandCharset} from 'simple-randstring'
+import { randomString, setRandCharset } from 'simple-randstring'
 
 // Define your own charset
 setRandCharset('abcdefg()!@#$%')
