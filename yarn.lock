@@ -18,13 +18,17 @@
   version "4.14.64"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.64.tgz#979cf3a3d4a368670840bf9b3e448dc33ffe84ee"
 
+"@types/lodash@^4.14.68":
+  version "4.14.68"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.68.tgz#754fbab68bd2bbb69547dc8ce7574f7012eed7f6"
+
 "@types/mocha@^2.2.41":
   version "2.2.41"
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.41.tgz#e27cf0817153eb9f2713b2d3f6c68f1e1c3ca608"
 
-"@types/node@^7.0.22":
-  version "7.0.22"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.22.tgz#4593f4d828bdd612929478ea40c67b4f403ca255"
+"@types/node@^8.0.9":
+  version "8.0.9"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.9.tgz#19f44c3b6cb8a70d261d366f73650e3e3891ab2d"
 
 "@types/should@^8.3.0":
   version "8.3.0"
@@ -2378,9 +2382,9 @@ tryor@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/tryor/-/tryor-0.1.2.tgz#8145e4ca7caff40acde3ccf946e8b8bb75b4172b"
 
-ts-loader@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-2.1.0.tgz#5a8efcc5c72c06fc49d69bad69c85617c6194f77"
+ts-loader@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-2.2.2.tgz#6ea98ebe384ee9ba4c891fea6de6d4e7d8134730"
   dependencies:
     colors "^1.0.3"
     enhanced-resolve "^3.0.0"
@@ -2411,9 +2415,9 @@ type-detect@0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-0.1.1.tgz#0ba5ec2a885640e470ea4e8505971900dac58822"
 
-typescript@^2.3.3:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.3.3.tgz#9639f3c3b40148e8ca97fe08a51dd1891bb6be22"
+typescript@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.4.1.tgz#c3ccb16ddaa0b2314de031e7e6fee89e5ba346bc"
 
 uglify-js@^2.8.27:
   version "2.8.27"

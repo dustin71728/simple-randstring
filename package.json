@@ -24,15 +24,16 @@
   },
   "homepage": "https://github.com/dustin71728/simple-randstring#readme",
   "devDependencies": {
+    "@types/lodash": "^4.14.68",
     "@types/lodash.isfinite": "^3.3.2",
     "@types/lodash.isstring": "^4.0.2",
     "@types/mocha": "^2.2.41",
-    "@types/node": "^7.0.22",
+    "@types/node": "^8.0.9",
     "@types/should": "^8.3.0",
     "http-server": "^0.10.0",
     "mocha": "^3.4.2",
-    "ts-loader": "^2.1.0",
-    "typescript": "^2.3.3",
+    "ts-loader": "^2.2.2",
+    "typescript": "^2.4.1",
     "webpack": "^2.6.1"
   },
   "dependencies": {
