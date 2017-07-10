@@ -7,7 +7,7 @@ import {
   _TestGetCharset,
   _TestGetRandomIntPool,
   MAXIMUM_POOL_SIZE
-} from '../../simple-randstring'
+} from './index'
 import 'should'
 
 const isFinite = require('lodash.isfinite')
