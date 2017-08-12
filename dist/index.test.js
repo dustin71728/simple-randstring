@@ -93,11 +93,11 @@ describe('Test randomString', function () {
 });
 describe('Test long randomString', function () {
     this.timeout(10000);
-    it('should return string which length is 10e6(crypto is on)', function () {
-        index_1.randomString(10e6, true).length.should.be.equal(10e6);
+    it('should return string which length is 1e7(crypto is on)', function () {
+        index_1.randomString(10e6, true).length.should.be.equal(1e7);
     });
-    it('should return string which length is 10e6(crypto is off)', function () {
-        index_1.randomString(10e6, false).length.should.be.equal(10e6);
+    it('should return string which length is 1e7(crypto is off)', function () {
+        index_1.randomString(10e6, false).length.should.be.equal(1e7);
     });
 });
 describe('Examine random string', function () {
