@@ -8,6 +8,7 @@ catch (e) {
 }
 
 import * as crypto from 'crypto'
+import { CharsetInfo, RandomIntList } from './interface'
 const isFinite = require('lodash.isfinite')
 const isString = require('lodash.isstring')
 
@@ -15,12 +16,7 @@ const CHARACTERS: string = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP
 const MAX_INTEGER: number = Number.MAX_SAFE_INTEGER
 const ALIGNED_SIZE = 256
 
-export const MAXIMUM_POOL_SIZE: number = 16384
-
-export interface CharsetInfo {
-  charset: string
-  base: number
-}
+const MAXIMUM_POOL_SIZE: number = 16384
 
 let customCharset: string = ''
 let alignedCharset: string = CHARACTERS.repeat(Math.floor(ALIGNED_SIZE / CHARACTERS.length))
@@ -32,7 +28,7 @@ function _getCharset(): CharsetInfo {
   return { charset, base }
 }
 
-export function setRandCharset(argCharset: string): void {
+function setRandCharset(argCharset: string): void {
   customCharset = argCharset.trim()
   const { charset, base } = _getCharset()
   alignedCharset = charset.repeat(Math.floor(ALIGNED_SIZE / base))
@@ -41,7 +37,7 @@ export function setRandCharset(argCharset: string): void {
   }
 }
 
-export function _TestGetCharset(): CharsetInfo {
+function _TestGetCharset(): CharsetInfo {
   return _getCharset()
 }
 
@@ -58,14 +54,12 @@ function _estimatedPoolSize(
   }
 }
 
-export function _TestEstimatedPoolSize(
+function _TestEstimatedPoolSize(
   randStrSize: number,
   strongCrypto: boolean): number {
   const { base } = _getCharset()
   return _estimatedPoolSize(base, randStrSize, strongCrypto)
 }
-
-export type RandomIntList = number[]
 
 function _isWindow(obj: Object): obj is Window {
   return !!(<Window>obj).document
@@ -125,7 +119,7 @@ function _getRandomIntPool(
   return _getRandomList(poolSize, canStrongCrypto)
 }
 
-export function _TestGetRandomIntPool(
+function _TestGetRandomIntPool(
   randStrSize: number,
   strongCrypto: boolean): RandomIntList {
   const { base } = _getCharset()
@@ -148,7 +142,7 @@ function _getAlignedCharset(strongCrypto: boolean): CharsetInfo {
   return { base: ALIGNED_SIZE, charset: newCharset }
 }
 
-export function randomString(
+function randomString(
   strLength: number,
   strongCrypto: boolean = false): string {
   if (!isFinite(strLength)) return ''
@@ -190,3 +184,14 @@ export function randomString(
   }
   return result
 }
+
+const output = {
+  MAXIMUM_POOL_SIZE,
+  setRandCharset,
+  _TestGetCharset,
+  _TestEstimatedPoolSize,
+  _TestGetRandomIntPool,
+  randomString
+}
+
+export = output

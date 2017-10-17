@@ -3,7 +3,6 @@ import {
   randomString,
   _TestEstimatedPoolSize,
   setRandCharset,
-  CharsetInfo,
   _TestGetCharset,
   _TestGetRandomIntPool,
   MAXIMUM_POOL_SIZE

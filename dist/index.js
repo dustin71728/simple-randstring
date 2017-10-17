@@ -1,6 +1,5 @@
 "use strict";
 /// <reference path="../node_modules/typescript/lib/lib.es6.d.ts" />
-Object.defineProperty(exports, "__esModule", { value: true });
 try {
     require('babel-polyfill');
 }
@@ -13,7 +12,7 @@ var isString = require('lodash.isstring');
 var CHARACTERS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 var MAX_INTEGER = Number.MAX_SAFE_INTEGER;
 var ALIGNED_SIZE = 256;
-exports.MAXIMUM_POOL_SIZE = 16384;
+var MAXIMUM_POOL_SIZE = 16384;
 var customCharset = '';
 var alignedCharset = CHARACTERS.repeat(Math.floor(ALIGNED_SIZE / CHARACTERS.length));
 function _getCharset() {
@@ -30,15 +29,13 @@ function setRandCharset(argCharset) {
         alignedCharset = charset.substr(0, ALIGNED_SIZE);
     }
 }
-exports.setRandCharset = setRandCharset;
 function _TestGetCharset() {
     return _getCharset();
 }
-exports._TestGetCharset = _TestGetCharset;
 function _estimatedPoolSize(base, randStrSize, strongCrypto) {
     if (strongCrypto) {
         var poolSize = Math.ceil(randStrSize / 4);
-        return poolSize > exports.MAXIMUM_POOL_SIZE ? exports.MAXIMUM_POOL_SIZE : poolSize;
+        return poolSize > MAXIMUM_POOL_SIZE ? MAXIMUM_POOL_SIZE : poolSize;
     }
     else {
         return Math.ceil(randStrSize * Math.log2(base) / 53);
@@ -48,7 +45,6 @@ function _TestEstimatedPoolSize(randStrSize, strongCrypto) {
     var base = _getCharset().base;
     return _estimatedPoolSize(base, randStrSize, strongCrypto);
 }
-exports._TestEstimatedPoolSize = _TestEstimatedPoolSize;
 function _isWindow(obj) {
     return !!obj.document;
 }
@@ -99,7 +95,6 @@ function _TestGetRandomIntPool(randStrSize, strongCrypto) {
     var base = _getCharset().base;
     return _getRandomIntPool(base, randStrSize, strongCrypto);
 }
-exports._TestGetRandomIntPool = _TestGetRandomIntPool;
 function _getAlignedCharset(strongCrypto) {
     var _a = _getCharset(), base = _a.base, charset = _a.charset;
     var newCharset = alignedCharset;
@@ -153,4 +148,12 @@ function randomString(strLength, strongCrypto) {
     }
     return result;
 }
-exports.randomString = randomString;
+var output = {
+    MAXIMUM_POOL_SIZE: MAXIMUM_POOL_SIZE,
+    setRandCharset: setRandCharset,
+    _TestGetCharset: _TestGetCharset,
+    _TestEstimatedPoolSize: _TestEstimatedPoolSize,
+    _TestGetRandomIntPool: _TestGetRandomIntPool,
+    randomString: randomString
+};
+module.exports = output;
