@@ -36,7 +36,6 @@
     "webpack": "^2.6.1"
   },
   "dependencies": {
-    "babel-polyfill": "^6.23.0",
     "lodash.isfinite": "^3.3.2",
     "lodash.isstring": "^4.0.1",
     "nightwatch": "^0.9.15",
