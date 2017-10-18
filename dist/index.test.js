@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-/// <reference path="../node_modules/typescript/lib/lib.es6.d.ts" />
 var index_1 = require("./index");
 require("should");
 var isFinite = require('lodash.isfinite');

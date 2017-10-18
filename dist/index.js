@@ -1,11 +1,4 @@
 "use strict";
-/// <reference path="../node_modules/typescript/lib/lib.es6.d.ts" />
-try {
-    require('babel-polyfill');
-}
-catch (e) {
-    console.warn(e.message);
-}
 var crypto = require("crypto");
 var isFinite = require('lodash.isfinite');
 var isString = require('lodash.isstring');
