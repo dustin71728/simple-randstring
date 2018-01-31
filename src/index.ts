@@ -176,7 +176,7 @@ function randomString(
   return result
 }
 
-const output = {
+export {
   MAXIMUM_POOL_SIZE,
   setRandCharset,
   _TestGetCharset,
@@ -184,5 +184,3 @@ const output = {
   _TestGetRandomIntPool,
   randomString
 }
-
-export = output
